@@ -250,14 +250,17 @@ module.exports = async function handler(req, res) {
     }
   }
 
-  try {
+ try {
     const { message } = req.body;
-console.log('WEBHOOK_EVENT:', JSON.stringify({ type: message?.type, keys: Object.keys(req.body || {}), messageKeys: Object.keys(message || {}) }));
+    console.log('WEBHOOK_RAW:', JSON.stringify(Object.keys(req.body || {})));
 
-    // ── Custom Tool calls from Vapi (new format) ──
-    // Vapi sends: { message: { type: 'tool-calls', toolCallList: [{ id, function: { name, arguments } }] } }
-    // Vapi expects: { results: [{ toolCallId: '...', result: '...' }] }
-    if (message?.type === 'tool-calls') {
+    // ── Custom Tool calls from Vapi ──
+    // Tool-specific Server URL receives payload differently than assistant Server URL
+    // Check both: req.body.message.toolCallList AND req.body.toolCallList
+    const toolCallList = message?.toolCallList || req.body?.toolCallList || 
+                         (message?.type === 'tool-calls' && message?.toolCallList) || null;
+    
+    if (toolCallList && toolCallList.length > 0) {
       const toolCalls = message.toolCallList || [];
       const results = [];
 
