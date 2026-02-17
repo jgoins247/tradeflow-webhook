@@ -253,7 +253,64 @@ module.exports = async function handler(req, res) {
   try {
     const { message } = req.body;
 
-    // ── Function calls from Vapi ──
+    // ── Custom Tool calls from Vapi (new format) ──
+    // Vapi sends: { message: { type: 'tool-calls', toolCallList: [{ id, function: { name, arguments } }] } }
+    // Vapi expects: { results: [{ toolCallId: '...', result: '...' }] }
+    if (message?.type === 'tool-calls') {
+      const toolCalls = message.toolCallList || [];
+      const results = [];
+
+      for (const tc of toolCalls) {
+        const fnName = tc.function?.name;
+        const params = typeof tc.function?.arguments === 'string' 
+          ? JSON.parse(tc.function.arguments) 
+          : tc.function?.arguments || {};
+        let resultMsg = '';
+
+        switch (fnName) {
+          case 'check_availability':
+            const avail = await getAvailability(params.preferred_date, params.urgency || 'flexible');
+            resultMsg = avail.message;
+            break;
+
+          case 'book_appointment':
+            if (!params.caller_name || !params.phone || !params.appointment_time) {
+              resultMsg = "I need a few more details before booking. Could you confirm your name, number, and preferred time?";
+            } else {
+              const booking = await bookAppointment(params);
+              resultMsg = booking.message;
+            }
+            break;
+
+          case 'send_emergency_alert': {
+            const alertSent = await sendSMS(process.env.OWNER_PHONE_NUMBER,
+              `🚨 EMERGENCY CALL\n${params.caller_name || 'Caller'} — ${params.phone}\n${params.issue}\n📍 ${params.address || 'No address given'}\n\nCall back ASAP!`
+            );
+            await storeCall({
+              id: `emergency-${Date.now()}`,
+              type: 'emergency',
+              caller_name: params.caller_name,
+              phone: params.phone,
+              issue: params.issue,
+              address: params.address,
+              alert_sent: alertSent,
+              created_at: new Date().toISOString()
+            });
+            resultMsg = `I've sent an urgent alert to ${process.env.OWNER_NAME}. They'll call you right back.`;
+            break;
+          }
+
+          default:
+            resultMsg = `Unknown function: ${fnName}`;
+        }
+
+        results.push({ toolCallId: tc.id, result: resultMsg });
+      }
+
+      return res.json({ results });
+    }
+
+    // ── Legacy function-call format (fallback) ──
     if (message?.type === 'function-call') {
       const fn = message.functionCall;
       if (!fn?.name) return res.status(400).json({ error: 'Missing function name' });
@@ -272,7 +329,7 @@ module.exports = async function handler(req, res) {
           }
           break;
 
-        case 'send_emergency_alert':
+        case 'send_emergency_alert': {
           const alertSent = await sendSMS(process.env.OWNER_PHONE_NUMBER,
             `🚨 EMERGENCY CALL\n${fn.parameters?.caller_name || 'Caller'} — ${fn.parameters?.phone}\n${fn.parameters?.issue}\n📍 ${fn.parameters?.address || 'No address given'}\n\nCall back ASAP!`
           );
@@ -288,6 +345,7 @@ module.exports = async function handler(req, res) {
           });
           result = { success: true, message: `I've sent an urgent alert to ${process.env.OWNER_NAME}. They'll call you right back.` };
           break;
+        }
 
         default:
           result = { error: `Unknown function: ${fn.name}` };
