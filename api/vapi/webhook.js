@@ -252,6 +252,7 @@ module.exports = async function handler(req, res) {
 
   try {
     const { message } = req.body;
+console.log('WEBHOOK_EVENT:', JSON.stringify({ type: message?.type, keys: Object.keys(req.body || {}), messageKeys: Object.keys(message || {}) }));
 
     // ── Custom Tool calls from Vapi (new format) ──
     // Vapi sends: { message: { type: 'tool-calls', toolCallList: [{ id, function: { name, arguments } }] } }
