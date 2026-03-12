@@ -13,11 +13,11 @@
  *   VAPI_SECRET (optional but recommended — set in Vapi dashboard + env vars)
  *   TIMEZONE (defaults to America/Chicago)
  */
-
+ 
 // ── Telnyx SMS client (no SDK needed — plain fetch) ──
 const TELNYX_API_KEY = process.env.TELNYX_API_KEY;
 const TELNYX_PHONE_NUMBER = process.env.TELNYX_PHONE_NUMBER;
-
+ 
 // ── In-memory call store (Vercel serverless = ephemeral, but we persist to KV if available) ──
 // For MVP: calls are stored in Vercel KV. If no KV, falls back to returning empty.
 // Upgrade path: Supabase or PlanetScale for persistent storage.
@@ -51,7 +51,7 @@ async function storeCall(callData) {
   console.log('CALL_DATA:', JSON.stringify(callData));
   return false;
 }
-
+ 
 // ── SMS Helper (Telnyx) ──
 async function sendSMS(to, body) {
   if (!TELNYX_API_KEY || !TELNYX_PHONE_NUMBER) {
@@ -87,7 +87,7 @@ async function sendSMS(to, body) {
     return false;
   }
 }
-
+ 
 // ── Cal.com Availability ──
 // Cal.com v2 uses /v2/slots/available, but v1 is still supported for most plans.
 // We try v2 first, fall back to v1.
@@ -136,7 +136,7 @@ async function getAvailability(preferredDate, urgency) {
   }).slice(0, 3);
   return { available: true, slots, message: `I've got: ${slots.map(s => s.display).join(', ')}. Which works best?` };
 }
-
+ 
 // ── Book Appointment ──
 async function bookAppointment(params) {
   const tz = process.env.TIMEZONE || 'America/Chicago';
@@ -227,7 +227,7 @@ async function bookAppointment(params) {
   }
   return { success: false, message: "The booking didn't go through. I'll have " + process.env.OWNER_NAME + " call you back to schedule." };
 }
-
+ 
 // ── Main Handler ──
 module.exports = async function handler(req, res) {
   // CORS for dashboard fetches
@@ -248,11 +248,14 @@ module.exports = async function handler(req, res) {
     const { message } = req.body;
     console.log('WEBHOOK_RAW:', JSON.stringify(Object.keys(req.body || {})));
     // ── Custom Tool calls from Vapi ──
-    const toolCallList = message?.toolCallList || req.body?.toolCallList ||
-                         (message?.type === 'tool-calls' && message?.toolCallList) || null;
-
+    // Handle both formats: older toolCallList and newer toolCalls
+    const toolCallList = message?.toolCallList || message?.toolCalls ||
+                         req.body?.toolCallList || req.body?.toolCalls || null;
+ 
+    console.log('TOOL_CALL_CHECK:', JSON.stringify({ type: message?.type, hasToolCallList: !!message?.toolCallList, hasToolCalls: !!message?.toolCalls }));
+ 
     if (toolCallList && toolCallList.length > 0) {
-      const toolCalls = message.toolCallList || [];
+      const toolCalls = toolCallList;
       const results = [];
       for (const tc of toolCalls) {
         const fnName = tc.function?.name;
