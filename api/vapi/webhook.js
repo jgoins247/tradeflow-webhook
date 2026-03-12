@@ -366,6 +366,20 @@ module.exports = async function handler(req, res) {
         created_at: report.call?.createdAt || new Date().toISOString()
       };
       await storeCall(callRecord);
+ 
+      // ── SMS alert to owner on every call ──
+      const callerPhone = callRecord.phoneNumber !== 'unknown' ? callRecord.phoneNumber : 'unknown number';
+      const duration = Math.round(callRecord.duration);
+      const emoji = wasEmergency ? '🚨' : wasBooked ? '📋' : '📞';
+      const status = wasEmergency ? 'EMERGENCY' : wasBooked ? 'BOOKED' : 'NEW LEAD';
+ 
+      // Build transcript snippet (first 300 chars)
+      const snippet = transcript.replace(/\n/g, ' ').slice(0, 300);
+ 
+      await sendSMS(process.env.OWNER_PHONE_NUMBER,
+        `${emoji} ${status} — CallCovered\nFrom: ${callerPhone}\nDuration: ${duration}s\n\n${snippet}${snippet.length >= 300 ? '...' : ''}`
+      );
+ 
       return res.json({ received: true });
     }
     // ── Status updates (call started, ringing, etc.) ──
