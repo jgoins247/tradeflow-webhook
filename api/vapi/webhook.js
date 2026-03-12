@@ -380,6 +380,13 @@ module.exports = async function handler(req, res) {
         `${emoji} ${status} — CallCovered\nFrom: ${callerPhone}\nDuration: ${duration}s\n\n${snippet}${snippet.length >= 300 ? '...' : ''}`
       );
  
+      // ── SMS confirmation to customer on every call ──
+      if (callRecord.phoneNumber && callRecord.phoneNumber !== 'unknown') {
+        await sendSMS(callRecord.phoneNumber,
+          `Hi! Thanks for calling ${process.env.BUSINESS_NAME}. We got your message and ${process.env.OWNER_NAME} will be in touch with you shortly. - CallCovered`
+        );
+      }
+ 
       return res.json({ received: true });
     }
     // ── Status updates (call started, ringing, etc.) ──
