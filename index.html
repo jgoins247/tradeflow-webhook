@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CallCovered — AI Phone Answering for Trades Businesses</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #f0f0f0; }
+    a { color: #4ade80; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* NAV */
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; border-bottom: 1px solid #1f1f1f; }
+    .logo { font-size: 22px; font-weight: 700; color: #4ade80; letter-spacing: -0.5px; }
+    .nav-links a { color: #aaa; margin-left: 24px; font-size: 14px; }
+
+    /* HERO */
+    .hero { text-align: center; padding: 100px 20px 80px; max-width: 760px; margin: 0 auto; }
+    .badge { display: inline-block; background: #1a2e1a; color: #4ade80; border: 1px solid #2d5a2d; padding: 6px 14px; border-radius: 20px; font-size: 13px; margin-bottom: 24px; }
+    .hero h1 { font-size: clamp(36px, 6vw, 62px); font-weight: 800; line-height: 1.1; letter-spacing: -1px; margin-bottom: 20px; }
+    .hero h1 span { color: #4ade80; }
+    .hero p { font-size: 18px; color: #aaa; line-height: 1.6; margin-bottom: 36px; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .cta-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { background: #4ade80; color: #0f0f0f; padding: 14px 28px; border-radius: 8px; font-weight: 700; font-size: 15px; }
+    .btn-secondary { border: 1px solid #333; color: #f0f0f0; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 15px; }
+
+    /* SOCIAL PROOF */
+    .proof { text-align: center; padding: 20px; color: #666; font-size: 14px; border-bottom: 1px solid #1f1f1f; }
+
+    /* PROBLEM */
+    .section { padding: 80px 20px; max-width: 900px; margin: 0 auto; }
+    .section h2 { font-size: 36px; font-weight: 800; margin-bottom: 16px; letter-spacing: -0.5px; }
+    .section p { color: #aaa; font-size: 17px; line-height: 1.7; margin-bottom: 16px; }
+
+    /* HOW IT WORKS */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-top: 40px; }
+    .step { background: #161616; border: 1px solid #222; border-radius: 12px; padding: 28px; }
+    .step-num { font-size: 32px; font-weight: 800; color: #4ade80; margin-bottom: 12px; }
+    .step h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .step p { color: #888; font-size: 14px; line-height: 1.6; margin: 0; }
+
+    /* PRICING */
+    .pricing-card { background: #161616; border: 1px solid #4ade80; border-radius: 16px; padding: 48px; max-width: 440px; margin: 40px auto 0; text-align: center; }
+    .price { font-size: 64px; font-weight: 800; color: #4ade80; line-height: 1; }
+    .price span { font-size: 22px; color: #aaa; font-weight: 400; }
+    .pricing-card p { color: #aaa; margin: 16px 0 28px; font-size: 15px; }
+    .feature-list { text-align: left; list-style: none; margin-bottom: 32px; }
+    .feature-list li { padding: 8px 0; border-bottom: 1px solid #222; font-size: 15px; color: #ccc; }
+    .feature-list li::before { content: "✓ "; color: #4ade80; font-weight: 700; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid #1f1f1f; padding: 40px 20px; text-align: center; }
+    footer p { color: #555; font-size: 13px; margin-bottom: 8px; }
+    footer .footer-links a { color: #555; margin: 0 12px; font-size: 13px; }
+    footer .footer-links a:hover { color: #aaa; }
+
+    /* LEGAL PAGES */
+    .legal { max-width: 760px; margin: 0 auto; padding: 60px 20px; display: none; }
+    .legal h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+    .legal .updated { color: #666; font-size: 14px; margin-bottom: 40px; }
+    .legal h2 { font-size: 20px; font-weight: 700; margin: 32px 0 12px; color: #f0f0f0; }
+    .legal p, .legal li { color: #aaa; font-size: 15px; line-height: 1.8; margin-bottom: 12px; }
+    .legal ul { padding-left: 20px; }
+    .legal a.back { display: inline-block; margin-bottom: 32px; color: #4ade80; font-size: 14px; }
+
+    .main-content { display: block; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo" onclick="showPage('home')" style="cursor:pointer;">CallCovered</div>
+    <div class="nav-links">
+      <a href="#how">How It Works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="mailto:support@callcovered.io">Contact</a>
+    </div>
+  </nav>
+
+  <!-- MAIN LANDING PAGE -->
+  <div class="main-content" id="page-home">
+
+    <div class="hero">
+      <div class="badge">🤖 AI-Powered · 24/7 · No Staff Required</div>
+      <h1>Never Miss a <span>Job Lead</span> Again</h1>
+      <p>CallCovered answers every call for your trades business, qualifies the lead, and texts you the details — automatically, around the clock.</p>
+      <div class="cta-group">
+        <a href="mailto:support@callcovered.io" class="btn-primary">Get Early Access</a>
+        <a href="#how" class="btn-secondary">See How It Works</a>
+      </div>
+    </div>
+
+    <div class="proof">
+      Built for plumbers · HVAC techs · electricians · roofers · landscapers
+    </div>
+
+    <div class="section" id="problem">
+      <h2>Every missed call is a missed job.</h2>
+      <p>You're on a job site. Your phone rings. You can't answer. That customer calls your competitor instead — and they pick up.</p>
+      <p>Hiring a receptionist costs $3,000+/month. CallCovered costs $97/month and never takes a day off.</p>
+    </div>
+
+    <div class="section" id="how">
+      <h2>How it works.</h2>
+      <p>Set up takes minutes. No new hardware. Works with your existing number.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Call comes in</h3>
+          <p>Customer calls your business number. CallCovered's AI answers instantly — day or night.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>AI qualifies the lead</h3>
+          <p>Chloe collects their name, number, address, and job details — naturally, like a real receptionist.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>You get a text</h3>
+          <p>You receive an instant SMS with everything you need to call them back and close the job.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <h3>Customer gets a text</h3>
+          <p>The caller gets a confirmation that their message was received and you'll be in touch soon.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="pricing">
+      <h2>Simple pricing.</h2>
+      <p>One plan. No contracts. Cancel anytime.</p>
+      <div class="pricing-card">
+        <div class="price">$97<span>/mo</span></div>
+        <p>Everything you need to never miss a lead again.</p>
+        <ul class="feature-list">
+          <li>AI answers every inbound call 24/7</li>
+          <li>Instant SMS alert to you after every call</li>
+          <li>SMS confirmation sent to every caller</li>
+          <li>Emergency alert for urgent situations</li>
+          <li>Call transcript delivered to you</li>
+          <li>Works with any existing phone number</li>
+          <li>No setup fees · No contracts</li>
+        </ul>
+        <a href="mailto:support@callcovered.io" class="btn-primary" style="display:block; text-align:center;">Get Early Access →</a>
+      </div>
+    </div>
+
+    <footer>
+      <p>© 2026 CallCovered · James Goins · Sole Proprietor</p>
+      <div class="footer-links">
+        <a href="#" onclick="showPage('privacy'); return false;">Privacy Policy</a>
+        <a href="#" onclick="showPage('terms'); return false;">Terms of Service</a>
+        <a href="mailto:support@callcovered.io">support@callcovered.io</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- PRIVACY POLICY -->
+  <div class="legal" id="page-privacy">
+    <a class="back" href="#" onclick="showPage('home'); return false;">← Back to CallCovered</a>
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: March 12, 2026</p>
+
+    <h2>1. Who We Are</h2>
+    <p>CallCovered is an AI-powered phone answering service operated by James Goins, sole proprietor, based in Tennessee, USA. Contact: support@callcovered.io</p>
+
+    <h2>2. Information We Collect</h2>
+    <p>When a caller contacts a business using CallCovered, we may collect:</p>
+    <ul>
+      <li>Caller's name and phone number</li>
+      <li>Address or location of the job site</li>
+      <li>Description of the service needed</li>
+      <li>Call recording and transcript</li>
+    </ul>
+    <p>Business owners who subscribe to CallCovered provide their name, phone number, email address, and business information.</p>
+
+    <h2>3. How We Use Your Information</h2>
+    <p>Information collected during calls is used solely to:</p>
+    <ul>
+      <li>Notify the business owner of the incoming lead via SMS</li>
+      <li>Send the caller a confirmation that their message was received</li>
+      <li>Facilitate appointment scheduling when requested</li>
+    </ul>
+
+    <h2>4. SMS Messaging</h2>
+    <p>By calling a business that uses CallCovered, callers consent to receive a one-time SMS confirmation message. Message and data rates may apply. Reply STOP to opt out of future messages. Reply HELP for help.</p>
+    <p><strong>We do not share, sell, or rent mobile phone numbers or any personal information to third parties for marketing purposes.</strong> Mobile information will not be shared with third parties or affiliates for marketing or promotional purposes.</p>
+
+    <h2>5. Data Retention</h2>
+    <p>Call data is retained for up to 30 days for operational purposes and then deleted.</p>
+
+    <h2>6. Data Security</h2>
+    <p>We use industry-standard security measures to protect your information. All data is transmitted over encrypted HTTPS connections.</p>
+
+    <h2>7. Your Rights</h2>
+    <p>You may request deletion of your data at any time by contacting support@callcovered.io.</p>
+
+    <h2>8. Changes to This Policy</h2>
+    <p>We may update this policy from time to time. Changes will be posted on this page with an updated date.</p>
+
+    <h2>9. Contact</h2>
+    <p>Questions? Email support@callcovered.io</p>
+  </div>
+
+  <!-- TERMS OF SERVICE -->
+  <div class="legal" id="page-terms">
+    <a class="back" href="#" onclick="showPage('home'); return false;">← Back to CallCovered</a>
+    <h1>Terms of Service</h1>
+    <p class="updated">Last updated: March 12, 2026</p>
+
+    <h2>1. Agreement</h2>
+    <p>By using CallCovered, you agree to these Terms of Service. CallCovered is operated by James Goins, sole proprietor, Tennessee, USA.</p>
+
+    <h2>2. Service Description</h2>
+    <p>CallCovered provides AI-powered phone answering services for trades businesses. The service answers inbound calls, collects caller information, and sends SMS notifications to business owners and callers.</p>
+
+    <h2>3. SMS Communications</h2>
+    <p>CallCovered sends automated SMS messages as part of its service. Message frequency varies based on call volume. Message and data rates may apply. To opt out of SMS messages, reply STOP. For help, reply HELP or contact support@callcovered.io.</p>
+
+    <h2>4. Acceptable Use</h2>
+    <p>You agree not to use CallCovered for any unlawful purpose or in any way that violates applicable federal, state, or local laws. You agree not to send prohibited content including but not limited to spam, harassment, or illegal content.</p>
+
+    <h2>5. Subscription and Billing</h2>
+    <p>CallCovered is offered as a monthly subscription at $97/month. Subscriptions auto-renew monthly. You may cancel at any time by contacting support@callcovered.io. No refunds are provided for partial months.</p>
+
+    <h2>6. Limitation of Liability</h2>
+    <p>CallCovered is provided "as is" without warranties of any kind. We are not liable for missed calls, failed SMS delivery, or any damages arising from use of the service.</p>
+
+    <h2>7. Changes to Terms</h2>
+    <p>We reserve the right to modify these terms at any time. Continued use of the service constitutes acceptance of updated terms.</p>
+
+    <h2>8. Contact</h2>
+    <p>Questions? Email support@callcovered.io</p>
+  </div>
+
+  <script>
+    function showPage(page) {
+      document.getElementById('page-home').style.display = page === 'home' ? 'block' : 'none';
+      document.getElementById('page-privacy').style.display = page === 'privacy' ? 'block' : 'none';
+      document.getElementById('page-terms').style.display = page === 'terms' ? 'block' : 'none';
+      window.scrollTo(0, 0);
+    }
+  </script>
+
+</body>
+</html>
